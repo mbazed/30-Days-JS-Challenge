@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS-Challenge</title>
+    <style>
+      button {
+        background: none;
+        border: none;
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      pre {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>30-Day-JavaScrip-Challenge by ChaiCode</h1>
+    <pre>
+        /30-Day-JavaScript-Challenge
+        │
+        ├── <button onclick="loadScript('Day1/tasks.js')">Day - 1</button>
+    </pre>
+    <script>
+      function loadScript(src) {
+        console.clear();    
+        const script = document.createElement("script");
+        script.src = src;
+        document.body.append(script);
+      }
+    </script>
+  </body>
+</html>

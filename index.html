@@ -4,44 +4,147 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JS-Challenge</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark-reasonable.min.css"
+    />
     <style>
+      body {
+        background-color: rgb(33, 33, 33);
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Ensure the body takes full height */
+      }
+      h1 {
+        margin: 0;
+        padding: 10px;
+        background-color: rgb(33, 33, 33);
+        text-align: center;
+      }
       button {
         background: none;
         border: none;
-        color: blue;
+        color: lightskyblue;
         text-decoration: underline;
         cursor: pointer;
       }
+      .main-content {
+        display: flex;
+        padding-top: 5%;
+        flex: 1;
+        overflow: hidden;
+      }
+      .alert {
+        position: fixed;
+        bottom: 20px; /* Distance from the bottom */
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 50%; /* Maximum width of the alert */
+        background-color: #9f342d; /* Red background */
+        color: white; /* White text */
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Shadow effect */
+        border-radius: 5px; /* Rounded corners */
+        z-index: 1000; /* Make sure it is on top of other content */
+      }
       pre {
         font-family: monospace;
+        position: absolute;
+        left: 10%;
+        width: 50%;
+        overflow-y: auto;
+        height: 100%; /* Allow it to fill available space */
+      }
+      #filecontents {
+        position: absolute;
+        right: 10%; /* Align to the right */
+        width: 30%; /* 20% width */
+        height: 70%; /* Take remaining space */
+        border-radius: 0.15rem;
+        overflow-y: auto;
+        color: white;
+        background-color: rgb(44, 44, 44);
+        border: 1px solid rgb(99, 99, 99);
+        padding: 10px;
+        max-height: 90%; /* Ensure it does not exceed parent */
+        box-sizing: border-box;
+        font-family: monospace;
+        white-space: pre-wrap;
       }
     </style>
   </head>
   <body>
-    <h1>30-Day-JavaScrip-Challenge by ChaiCode</h1>
-    <pre>
+    <h1>30-Day-JavaScript-Challenge by ChaiCode</h1>
+    <div class="main-content">
+      <pre>
         /30-Day-JavaScript-Challenge
         │
-        ├── <button onclick="loadScript('Day1/tasks.js')">Day - 1</button>
-        ├── <button onclick="loadScript('Day2/fr1.js')">Day - 2 - FR1</button>
-        ├── <button onclick="loadScript('Day2/fr2.js')">Day - 2 - FR2</button>
-        ├── <button onclick="loadScript('Day2/fr3.js')">Day - 2 - FR3</button>
-        ├── <button onclick="loadScript('Day3/fr1.js')">Day - 3 - FR1</button>
-        ├── <button onclick="loadScript('Day3/fr2.js')">Day - 3 - FR2</button>
-        ├── <button onclick="loadScript('Day3/fr3.js')">Day - 3 - FR3</button>
-        ├── <button onclick="loadScript('Day3/fr4.js')">Day - 3 - FR4</button>
-        ├── <button onclick="loadScript('Day3/fr5.js')">Day - 3 - FR5</button>
-    </pre>
+        ├── <button onclick="handleClick('Day1/tasks.js')">Day - 1</button>
+        ├── <button onclick="handleClick('Day2/fr1.js')">Day - 2 - FR1</button>
+        ├── <button onclick="handleClick('Day2/fr2.js')">Day - 2 - FR2</button>
+        ├── <button onclick="handleClick('Day2/fr3.js')">Day - 2 - FR3</button>
+        ├── <button onclick="handleClick('Day3/fr1.js')">Day - 3 - FR1</button>
+        ├── <button onclick="handleClick('Day3/fr2.js')">Day - 3 - FR2</button>
+        ├── <button onclick="handleClick('Day3/fr3.js')">Day - 3 - FR3</button>
+        ├── <button onclick="handleClick('Day3/fr4.js')">Day - 3 - FR4</button>
+        ├── <button onclick="handleClick('Day3/fr5.js')">Day - 3 - FR5</button>
+        ├── <button onclick="handleClick('Day4/fr1.js')">Day - 4 - FR1</button>
+        ├── <button onclick="handleClick('Day4/fr2.js')">Day - 4 - FR2</button>
+        ├── <button onclick="handleClick('Day4/fr3.js')">Day - 4 - FR3</button>
+        ├── <button onclick="handleClick('Day4/fr4.js')">Day - 4 - FR4</button>
+        ├── <button onclick="handleClick('Day4/fr5.js')">Day - 4 - FR5</button>
+      </pre>
+      <div id="filecontents"></div>
+    </div>
+    <div class="alert">
+      Refresh the browser after every file execution to clear console memory and
+      avoid assignment errors.
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
+      function highlightSyntax(content) {
+        const element = document.createElement("pre");
+        element.className = "language-javascript";
+        element.innerHTML = content;
+        hljs.highlightElement(element);
+        return element.innerHTML;
+      }
+
+      function loadFile(path) {
+        fetch(path)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("HTTP error " + response.status);
+            }
+            return response.text();
+          })
+          .then((data) => {
+            document.getElementById("filecontents").innerHTML =
+              highlightSyntax(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching file: ", error);
+            document.getElementById("filecontents").textContent =
+              "Error fetching file: " + error;
+          });
+      }
+
       function loadScript(src) {
-        console.clear();    
+        console.clear();
         const script = document.createElement("script");
         script.src = src;
         document.body.append(script);
       }
 
-      function toggle(){
-        
+      function handleClick(filePath) {
+        loadFile(filePath);
+        loadScript(filePath);
       }
     </script>
   </body>
